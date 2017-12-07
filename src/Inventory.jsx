@@ -28,7 +28,6 @@ class Inventory extends Component{
     this.setState({
       [prop]:val
     });
-    console.log(prop,val  )
   }
 
   handleStockOnChange(val){
@@ -40,10 +39,17 @@ class Inventory extends Component{
   filter(item){
 
     let search=this.state.search;
+    let inStockOnly=this.state.inStockOnly;
     let pattern = new RegExp(search,'gi');
 
-    return pattern.test(item.name);
-
+    if(pattern.test(item.name)){
+      if (inStockOnly==true){
+          return item.stock>0
+      }
+      return true
+    }else{
+      return false
+    }
   }
 
   render(){
