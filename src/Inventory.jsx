@@ -16,13 +16,23 @@ var items=[
 class Inventory extends Component{
   constructor(props){
     super(props);
-
+    this.state={
+      search:'',stocked:false
+    }
+    this.handleOnChange=this.handleOnChange.bind(this);
   }
+
+  handleOnChange(val){
+    this.setState({
+      search:val
+    });
+  }
+
   render(){
     return(
       <div>
-      <SearchBox />
-      <ItemList />
+      <SearchBox value={this.state.search} onChangeHandler={this.handleOnChange}/>
+      <ItemList search={this.state.search}/>
       </div>
     )
   }
@@ -31,6 +41,11 @@ class Inventory extends Component{
 class SearchBox extends Component{
   constructor(props){
     super(props);
+    this.handleOnChange=this.handleOnChange.bind(this);
+  }
+
+  handleOnChange(e){
+    this.props.onChangeHandler(e.target.value);
   }
 
   render(){
@@ -38,10 +53,10 @@ class SearchBox extends Component{
         <fieldset>
           <legend>Filter Box</legend>
           <label htmlFor="itemname">
-            <input type="text" name="itemname" />
+            <input type="text" name="itemname" value={this.props.value} onChange={this.handleOnChange} />
           </label>
           <label htmlFor="stock">
-            <input type="checkbox" name="stock"  />
+            <input type="checkbox" name="stock"   />
             with Stock
           </label>
         </fieldset>
@@ -68,7 +83,12 @@ class ItemList extends Component{
           </thead>
           <tbody>
             {
-              items.map((e,i)=>{
+              items.filter((e)=>{
+                let search=this.props.search;
+                let pattern = new RegExp(search,'gi');
+                return pattern.test(e.name);
+              })
+              .map((e,i)=>{
                return (
                 <tr key={i}>
                   <td>{e.name}</td>
