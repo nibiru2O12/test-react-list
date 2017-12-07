@@ -17,21 +17,28 @@ class Inventory extends Component{
   constructor(props){
     super(props);
     this.state={
-      search:'',stocked:false
+      search:'',"inStockOnly":false
     }
-    this.handleOnChange=this.handleOnChange.bind(this);
+    this.handleSeachOnChange=this.handleSeachOnChange.bind(this);
   }
 
-  handleOnChange(val){
+  handleSeachOnChange(prop,val){
     this.setState({
-      search:val
+      [prop]:val
+    });
+    console.log(prop,val  )
+  }
+
+  handleStockOnChange(val){
+    this.setState({
+      "inStockOnly":val
     });
   }
 
   render(){
     return(
       <div>
-      <SearchBox value={this.state.search} onChangeHandler={this.handleOnChange}/>
+      <SearchBox value={this.state.search} inStockOnly={this.state.inStockOnly} onChangeHandler={this.handleSeachOnChange}/>
       <ItemList search={this.state.search}/>
       </div>
     )
@@ -41,23 +48,31 @@ class Inventory extends Component{
 class SearchBox extends Component{
   constructor(props){
     super(props);
-    this.handleOnChange=this.handleOnChange.bind(this);
+    this.handleSearchOnChange=this.handleSearchOnChange.bind(this);
   }
 
-  handleOnChange(e){
-    this.props.onChangeHandler(e.target.value);
+  handleSearchOnChange(e){
+    switch (e.target.type) {
+      case 'text':
+        this.props.onChangeHandler(e.target.name,e.target.value);
+        break;
+      case "checkbox":
+        this.props.onChangeHandler(e.target.name,e.target.checked);
+        break;
+      default:
+
+    }
   }
 
   render(){
     return(
         <fieldset>
           <legend>Filter Box</legend>
-          <label htmlFor="itemname">
-            <input type="text" name="itemname" value={this.props.value} onChange={this.handleOnChange} />
+          <label htmlFor="search">
+            <input type="text" name="search" value={this.props.value} onChange={this.handleSearchOnChange} />
           </label>
-          <label htmlFor="stock">
-            <input type="checkbox" name="stock"   />
-            with Stock
+          <label htmlFor="inStockOnly">
+            <input type="checkbox" name="inStockOnly" defaultChecked={this.props.inStockOnly} onChange={this.handleSearchOnChange}  />
           </label>
         </fieldset>
     )
