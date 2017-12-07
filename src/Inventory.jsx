@@ -21,6 +21,20 @@ class Inventory extends Component{
   render(){
     return(
       <div>
+      <SearchBox />
+      <ItemList />
+      </div>
+    )
+  }
+}
+
+class SearchBox extends Component{
+  constructor(props){
+    super(props);
+  }
+
+  render(){
+    return(
         <fieldset>
           <legend>Filter Box</legend>
           <label htmlFor="itemname">
@@ -31,33 +45,44 @@ class Inventory extends Component{
             with Stock
           </label>
         </fieldset>
-        <fieldset>
-          <legend>Stock List</legend>
-          <table>
-            <thead>
-              <tr>
-                <th>Item Name</th>
-                <th>Stock</th>
-                <th>Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                items.map((e,i)=>{
-                 return (
-                  <tr key={i}>
-                    <td>{e.name}</td>
-                    <td>{e.stock}</td>
-                    <td>{e.price}</td>
-                  </tr>
-                )
-              })
-            }
-            </tbody>
-          </table>
-        </fieldset>
-      </div>
+    )
+  }
+
+}
+
+class ItemList extends Component{
+  constructor(props){
+    super(props);
+  }
+  render(){
+    return(
+      <fieldset>
+        <legend>Stock List</legend>
+        <table>
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Stock</th>
+              <th>Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              items.map((e,i)=>{
+               return (
+                <tr key={i}>
+                  <td>{e.name}</td>
+                  <td>{e.stock}</td>
+                  <td>{e.price}</td>
+                </tr>
+              )
+            })
+          }
+          </tbody>
+        </table>
+      </fieldset>
     )
   }
 }
+
 module.exports = Inventory;
