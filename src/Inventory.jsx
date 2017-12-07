@@ -20,6 +20,8 @@ class Inventory extends Component{
       search:'',"inStockOnly":false
     }
     this.handleSeachOnChange=this.handleSeachOnChange.bind(this);
+    this.filter=this.filter.bind(this);
+
   }
 
   handleSeachOnChange(prop,val){
@@ -35,11 +37,24 @@ class Inventory extends Component{
     });
   }
 
+  filter(item){
+
+    let search=this.state.search;
+    let pattern = new RegExp(search,'gi');
+
+    return pattern.test(item.name);
+
+  }
+
   render(){
+
+    let search=this.state.search;
+    let inStockOnly=this.state.inStockOnly;
+
     return(
       <div>
-      <SearchBox value={this.state.search} inStockOnly={this.state.inStockOnly} onChangeHandler={this.handleSeachOnChange}/>
-      <ItemList search={this.state.search}/>
+      <SearchBox value={this.state.search} inStockOnly={inStockOnly} onChangeHandler={this.handleSeachOnChange}/>
+      <ItemList filter={this.filter}/>
       </div>
     )
   }
@@ -60,7 +75,6 @@ class SearchBox extends Component{
         this.props.onChangeHandler(e.target.name,e.target.checked);
         break;
       default:
-
     }
   }
 
@@ -73,6 +87,7 @@ class SearchBox extends Component{
           </label>
           <label htmlFor="inStockOnly">
             <input type="checkbox" name="inStockOnly" defaultChecked={this.props.inStockOnly} onChange={this.handleSearchOnChange}  />
+            show in stock only
           </label>
         </fieldset>
     )
@@ -85,6 +100,7 @@ class ItemList extends Component{
     super(props);
   }
   render(){
+
     return(
       <fieldset>
         <legend>Stock List</legend>
@@ -99,9 +115,7 @@ class ItemList extends Component{
           <tbody>
             {
               items.filter((e)=>{
-                let search=this.props.search;
-                let pattern = new RegExp(search,'gi');
-                return pattern.test(e.name);
+                return this.props.filter(e);
               })
               .map((e,i)=>{
                return (
