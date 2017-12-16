@@ -13,14 +13,39 @@ var items=[
   {name:"Pencil",stock:20,price:10}
 ];
 
+class AddInventory extends Component{
+
+  render(){
+    return (
+
+      <fieldset>
+
+        <legend>Inventory Details</legend>
+
+        <label>Product Code</label>
+        <input type="text" />
+
+        <label>Product Name</label>
+        <input type="text" />
+
+        <button>Add</button>
+
+      </fieldset>
+
+    )
+  }
+}
+
 class Inventory extends Component{
   constructor(props){
     super(props);
     this.state={
-      search:'',"inStockOnly":false
+      search:'',"inStockOnly":false,result:0
     }
+
     this.handleSeachOnChange=this.handleSeachOnChange.bind(this);
     this.filter=this.filter.bind(this);
+    this.recordCount=this.recordCount.bind(this);
 
   }
 
@@ -52,6 +77,12 @@ class Inventory extends Component{
     }
   }
 
+  recordCount(count){
+  /*  this.setState({
+      result:count
+    });*/
+    }
+
   render(){
 
     let search=this.state.search;
@@ -59,8 +90,10 @@ class Inventory extends Component{
 
     return(
       <div>
-      <SearchBox value={this.state.search} inStockOnly={inStockOnly} onChangeHandler={this.handleSeachOnChange}/>
-      <ItemList filter={this.filter}/>
+      <AddInventory />
+      <SearchBox value={this.state.search} inStockOnly={inStockOnly} result={this.state.result}
+        onChangeHandler={this.handleSeachOnChange}/>
+      <ItemList filter={this.filter} onChange={this.recordCount}/>
       </div>
     )
   }
@@ -95,6 +128,8 @@ class SearchBox extends Component{
             <input type="checkbox" name="inStockOnly" defaultChecked={this.props.inStockOnly} onChange={this.handleSearchOnChange}  />
             show in stock only
           </label>
+          <br />
+          item found:{this.props.result}
         </fieldset>
     )
   }
@@ -106,6 +141,18 @@ class ItemList extends Component{
     super(props);
   }
   render(){
+    var list=items.filter((e)=>{
+        return this.props.filter(e);
+      })
+      .map((e,i)=>{
+       return (
+        <tr key={i}>
+          <td>{e.name}</td>
+          <td>{e.stock}</td>
+          <td>{e.price}</td>
+        </tr>
+      )
+    });
 
     return(
       <fieldset>
@@ -119,20 +166,7 @@ class ItemList extends Component{
             </tr>
           </thead>
           <tbody>
-            {
-              items.filter((e)=>{
-                return this.props.filter(e);
-              })
-              .map((e,i)=>{
-               return (
-                <tr key={i}>
-                  <td>{e.name}</td>
-                  <td>{e.stock}</td>
-                  <td>{e.price}</td>
-                </tr>
-              )
-            })
-          }
+            {list}
           </tbody>
         </table>
       </fieldset>

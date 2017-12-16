@@ -4,6 +4,6 @@ import Inventory from './Inventory';
 import './index.css';
 
 ReactDOM.render(
-  <Inventory />,
+    <Inventory />,
   document.getElementById('root')
 );
